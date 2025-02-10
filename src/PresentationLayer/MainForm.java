@@ -1,11 +1,14 @@
 package PresentationLayer;
 
+import BusineesLayer.Employee;
 import PresentationLayer.Helpers.ElementsFormData;
+import PresentationLayer.Helpers.FormStatus;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.SQLException;
 
 public class MainForm extends JFrame {
 
@@ -45,17 +48,24 @@ public class MainForm extends JFrame {
 
         setVisible(true);;
     }
-    private  void showEmployeeForm(ActionEvent  e){
-        var ab = new ElementsFormData();
-        ab.title ="Employees";
-        ab.actionListenerAddButton = new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                JOptionPane.showMessageDialog(null,"Hello");
-            }
-        };
+    private  void showEmployeeForm(ActionEvent  e)  {
+        try {
+            var ab = new ElementsFormData();
+            ab.title = "Employees";
+            ab.tableModel = Employee.SelectEmployeesTable();
+            ab.actionListenerAddButton = new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    EmployeeForm employeeForm = new EmployeeForm(new Employee(), FormStatus.Create);
+                    employeeForm.setVisible(true);
+                }
+            };
 
-        ElementForm form = new ElementForm(ab);
-        form.setVisible(true);
+            ElementForm form = new ElementForm(ab);
+            form.setVisible(true);
+        }
+        catch (Exception ex){
+
+        }
     }
 }

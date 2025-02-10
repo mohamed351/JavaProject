@@ -41,13 +41,10 @@ public class ElementForm extends JFrame {
         }
         private JPanel addGrid(){
             JPanel panel = new JPanel(new GridLayout(1,1));
-            String column[]={"ID","NAME","SALARY"};
-            String data[][]={ {"101","Amit","670000"},
-                    {"102","Jai","780000"},
-                    {"101","Sachin","700000"}};
+
             panel.setBorder(BorderFactory.createEmptyBorder(20,20,20,20));
 
-            JTable table = new JTable(data,column);
+            JTable table = new JTable(abstact.tableModel);
             table.setFillsViewportHeight(true);
             JScrollPane sp=new JScrollPane(table);
             panel.add(sp);
