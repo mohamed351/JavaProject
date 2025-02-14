@@ -4,12 +4,17 @@ import PresentationLayer.Helpers.ElementsFormData;
 import PresentationLayer.Helpers.ElementsFormData;
 
 import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
 import java.awt.*;
+import java.awt.event.ActionEvent;
 
-public class ElementForm extends JFrame {
+public abstract   class ElementForm extends JFrame {
 
-
+    JTable table ;
     ElementsFormData abstact;
+    int selectedID;
+
+
 
         public ElementForm(ElementsFormData abstact){
             this.abstact = abstact;
@@ -44,7 +49,7 @@ public class ElementForm extends JFrame {
 
             panel.setBorder(BorderFactory.createEmptyBorder(20,20,20,20));
 
-            JTable table = new JTable(abstact.tableModel);
+            table= new JTable(abstact.tableModel);
             table.setFillsViewportHeight(true);
             JScrollPane sp=new JScrollPane(table);
             panel.add(sp);
@@ -54,13 +59,13 @@ public class ElementForm extends JFrame {
         private JPanel addButtons(){
             JPanel panel = new JPanel(new GridLayout(1,4,10,10));
             var buttonCreate = new JButton("Create");
-            buttonCreate.addActionListener(abstact.actionListenerAddButton);
+            buttonCreate.addActionListener(this::addNewElement);
             var editButton = new JButton("Edit");
-            editButton.addActionListener(abstact.actionListenerEditButton);
+            editButton.addActionListener(this::editNewElement);
             var deleteButton = new JButton("Delete");
-            deleteButton.addActionListener(abstact.actionListenerDeleteButton);
+            deleteButton.addActionListener(this::deleteElement);
             var printButton = new JButton("Print");
-            deleteButton.addActionListener(abstact.actionListenerPrintButton);
+            deleteButton.addActionListener(this::printElement);
             panel.setBorder(BorderFactory.createEmptyBorder(20,20,20,20));
             panel.add(buttonCreate);
             panel.add(editButton);
@@ -69,6 +74,23 @@ public class ElementForm extends JFrame {
             panel.add(printButton);
             return panel;
         }
+
+       public abstract  void addNewElement(ActionEvent event);
+    public abstract  void editNewElement(ActionEvent event);
+    public abstract  void deleteElement(ActionEvent event);
+    public abstract  void printElement(ActionEvent event);
+    public abstract  void reloadData(DefaultTableModel table);
+
+    public int getID(){
+        var selectedRowIndex= this.table.getSelectedRow();
+        if(selectedRowIndex != -1){
+           return (int) table.getValueAt(selectedRowIndex, 0);
+        }
+        else{
+            return -1;
+        }
+    }
+
 
 
 }

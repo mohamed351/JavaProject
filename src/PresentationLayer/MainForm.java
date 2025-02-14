@@ -51,17 +51,11 @@ public class MainForm extends JFrame {
     private  void showEmployeeForm(ActionEvent  e)  {
         try {
             var ab = new ElementsFormData();
+
             ab.title = "Employees";
             ab.tableModel = Employee.SelectEmployeesTable();
-            ab.actionListenerAddButton = new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    EmployeeForm employeeForm = new EmployeeForm(new Employee(), FormStatus.Create);
-                    employeeForm.setVisible(true);
-                }
-            };
+            ElementForm form = new MainEmployeeForm(ab);
 
-            ElementForm form = new ElementForm(ab);
             form.setVisible(true);
         }
         catch (Exception ex){

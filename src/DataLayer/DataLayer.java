@@ -2,6 +2,7 @@ package DataLayer;
 
 import javax.swing.table.DefaultTableModel;
 import java.sql.*;
+import java.util.List;
 import java.util.Map;
 
 public class DataLayer {
@@ -94,5 +95,31 @@ public class DataLayer {
         catch (Exception exception){
             throw exception;
         }
+    }
+
+    public void InsertOrUpdateOrDelete(String proc , List<Object> obj){
+
+
+        StringBuilder storedProcedure = new StringBuilder("{call " + proc + "(");
+        for (int i = 0; i < obj.size(); i++) {
+            storedProcedure.append(i == 0 ? "?" : ",?");
+        }
+        storedProcedure.append(")}");
+
+        try {
+            Connection conntion = DriverManager.getConnection(connection.getConnectionString());
+           var stmt = conntion.prepareCall(storedProcedure.toString());
+            int index = 1;
+            for (Object value : obj) {
+                stmt.setObject(index++, value);
+            }
+            stmt.execute();
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+
+
     }
 }
