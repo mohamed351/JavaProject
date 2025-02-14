@@ -1,6 +1,8 @@
 package PresentationLayer;
 
+import BusineesLayer.Customer;
 import BusineesLayer.Employee;
+import PresentationLayer.CustomerForm.MainCustomerForm;
 import PresentationLayer.Helpers.ElementsFormData;
 import PresentationLayer.Helpers.FormStatus;
 
@@ -24,11 +26,12 @@ public class MainForm extends JFrame {
         JMenuItem customersMenu = new JMenuItem("Customers");
         JMenuItem productMenu = new JMenuItem("Products");
         employeesMenu.addActionListener(this::showEmployeeForm);
-
+        customersMenu.addActionListener(this::showCustomerForm);
         // Exit Action
 
 
      fileMenu.add(employeesMenu);
+        fileMenu.add(customersMenu);
      menuBar.add(fileMenu);
         setJMenuBar(menuBar);
 
@@ -61,5 +64,22 @@ public class MainForm extends JFrame {
         catch (Exception ex){
 
         }
+    }
+
+    private  void showCustomerForm(ActionEvent e){
+
+        try {
+            var ab = new ElementsFormData();
+
+            ab.title = "Customers";
+            ab.tableModel = Customer.SelectAll();
+            ElementForm form = new MainCustomerForm(ab);
+
+            form.setVisible(true);
+        }
+        catch (Exception ex){
+
+        }
+
     }
 }

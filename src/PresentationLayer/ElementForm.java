@@ -10,8 +10,8 @@ import java.awt.event.ActionEvent;
 
 public abstract   class ElementForm extends JFrame {
 
-    JTable table ;
-    ElementsFormData abstact;
+   protected JTable table ;
+   protected ElementsFormData abstact;
     int selectedID;
 
 
@@ -25,7 +25,7 @@ public abstract   class ElementForm extends JFrame {
 
         private void InitialForm() {
             setTitle(this.abstact.title);
-            setDefaultCloseOperation(EXIT_ON_CLOSE);
+            setDefaultCloseOperation(DISPOSE_ON_CLOSE);
             Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
             setLayout(new BorderLayout());
             setSize(1000,800);

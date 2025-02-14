@@ -69,19 +69,22 @@ public class EmployeeForm  extends JFrame {
                 JOptionPane.showMessageDialog(null, "Successfully Added");
                 try {
                     this.elementsFormData.reloadData(Employee.SelectEmployeesTable());
+                    dispose();
                 } catch (SQLException ex) {
                     throw new RuntimeException(ex);
                 }
-                dispose();
+
             }
             else{
                 Employee.Update(this.employee);
                 JOptionPane.showMessageDialog(null, "Successfully Edited");
                 try {
                     this.elementsFormData.reloadData(Employee.SelectEmployeesTable());
+                    dispose();
                 } catch (SQLException ex) {
                     throw new RuntimeException(ex);
                 }
+
             }
         });
         panel.add(submitButton);

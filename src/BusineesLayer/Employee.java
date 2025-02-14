@@ -93,7 +93,7 @@ public class Employee {
 
         try{
             DataLayer layer = new DataLayer();
-            return layer.SelectGetTable("Select ID, Name, Salary,UserName from Employees");
+            return layer.SelectGetTable("Select ID, Name, Salary,UserName from Employees where IsDeleted = 0");
         }
         catch (Exception ex){
             throw ex;
@@ -154,10 +154,10 @@ public class Employee {
 //        layer.InsertOrUpdateOrDelete("sp_update_Employee",objectMap);
     }
     public static  void delete(int ID){
-//        DataLayer layer = new DataLayer();
-//        Map<String ,Object> objectMap = new HashMap<>();
-//        objectMap.put("ID",ID);
-//        layer.InsertOrUpdateOrDelete("sp_delete_employee",objectMap);
+      DataLayer layer = new DataLayer();
+        ArrayList<Object> obj = new ArrayList<>();
+        obj.add(ID);
+        layer.InsertOrUpdateOrDelete("sp_delete_employee",obj);
     }
 
 

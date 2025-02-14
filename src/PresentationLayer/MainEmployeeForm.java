@@ -9,6 +9,7 @@ import javax.swing.table.DefaultTableModel;
 import java.awt.event.ActionEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.sql.SQLException;
 
 public class MainEmployeeForm  extends  ElementForm{
 
@@ -31,6 +32,20 @@ public class MainEmployeeForm  extends  ElementForm{
 
     @Override
     public void deleteElement(ActionEvent event) {
+     var data =   JOptionPane.showConfirmDialog(null,"Do you want to delete Employee");
+      if(data == 0){
+        var emp =  Employee.GetEmployeeByID(this.getID());
+        if(emp == null){
+            return;
+        }
+        Employee.delete(emp.getId());
+
+        try {
+            reloadData( Employee.SelectEmployeesTable());
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+      }
 
     }
 
