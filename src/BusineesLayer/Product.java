@@ -12,6 +12,15 @@ public class Product {
     private  String name;
     private  double price;
 
+    public Product(){
+
+    }
+    public Product(int id, String name , double price){
+        this.id = id;
+        this.name = name;
+        this.price = price;
+    }
+
     public int getId() {
         return id;
     }
@@ -97,5 +106,27 @@ public class Product {
         }
 
     }
+    public static ArrayList<Product>  GetAllProducts(){
 
+        try {
+
+            var allProducts = SelectAll();
+            ArrayList<Product> products = new ArrayList<>();
+            for(int i=0;i<allProducts.getRowCount();i++){
+
+                 products.add(new Product((int)allProducts.getValueAt(i,0)
+                         ,String.valueOf( allProducts.getValueAt(i,1))
+                         ,Double.parseDouble( allProducts.getValueAt(i,2).toString())));
+            }
+            return products;
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public String toString() {
+        return this.name;
+    }
 }

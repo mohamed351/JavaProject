@@ -2,9 +2,14 @@ package PresentationLayer;
 
 import BusineesLayer.Customer;
 import BusineesLayer.Employee;
+import BusineesLayer.Product;
+import BusineesLayer.Store;
 import PresentationLayer.CustomerForm.MainCustomerForm;
 import PresentationLayer.Helpers.ElementsFormData;
 import PresentationLayer.Helpers.FormStatus;
+import PresentationLayer.OrderInvoiceForm.InvoiceForm;
+import PresentationLayer.ProductsForm.MainProductForm;
+import PresentationLayer.StoreForm.MainStoreForm;
 
 import javax.swing.*;
 import java.awt.*;
@@ -22,17 +27,29 @@ public class MainForm extends JFrame {
         // Create Menu Bar
         JMenuBar menuBar = new JMenuBar();
         JMenu fileMenu = new JMenu("Master Data");
+        JMenu InvoiceMenu = new JMenu("Invoice");
+         JMenuItem clientInvoice = new JMenuItem("Client Invoice");
+        clientInvoice.addActionListener(this::showClientInvoice);
+
         JMenuItem employeesMenu = new JMenuItem("Employees");
         JMenuItem customersMenu = new JMenuItem("Customers");
         JMenuItem productMenu = new JMenuItem("Products");
+        JMenuItem storeMenu = new JMenuItem("Stores");
         employeesMenu.addActionListener(this::showEmployeeForm);
         customersMenu.addActionListener(this::showCustomerForm);
+        productMenu.addActionListener(this::showProductForm);
+        storeMenu.addActionListener(this::showStoreForm);
         // Exit Action
 
 
      fileMenu.add(employeesMenu);
         fileMenu.add(customersMenu);
+        fileMenu.add(productMenu);
+        fileMenu.add(storeMenu);
+
      menuBar.add(fileMenu);
+        InvoiceMenu.add(clientInvoice);
+        menuBar.add(InvoiceMenu);
         setJMenuBar(menuBar);
 
 
@@ -80,6 +97,46 @@ public class MainForm extends JFrame {
         catch (Exception ex){
 
         }
+
+    }
+
+    private  void showProductForm(ActionEvent e){
+
+        try {
+            var ab = new ElementsFormData();
+
+            ab.title = "Products";
+            ab.tableModel = Product.SelectAll();
+            ElementForm form = new MainProductForm(ab);
+
+            form.setVisible(true);
+        }
+        catch (Exception ex){
+
+        }
+
+    }
+
+    private  void showStoreForm(ActionEvent e){
+
+        try {
+            var ab = new ElementsFormData();
+
+            ab.title = "Stores";
+            ab.tableModel = Store.SelectAll();
+            ElementForm form = new MainStoreForm(ab);
+
+            form.setVisible(true);
+        }
+        catch (Exception ex){
+
+        }
+
+    }
+    private  void showClientInvoice(ActionEvent e){
+
+        InvoiceForm frm = new InvoiceForm();
+        frm.setVisible(true);
 
     }
 }

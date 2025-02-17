@@ -13,6 +13,15 @@ public class Customer {
     private  String name;
     private  String phone;
 
+    public Customer(){
+
+    }
+    public Customer(int id , String name , String phone){
+        this.id = id;
+        this.name = name;
+        this.phone = phone;
+    }
+
 
     public int getId() {
         return id;
@@ -99,7 +108,25 @@ public class Customer {
         }
 
     }
+    public static  ArrayList<Customer> GetAllCustomers(){
 
+        try {
+            var list = SelectAll();
+            ArrayList<Customer> customers = new ArrayList<>();
+            for(int i=0;i<list.getRowCount();i++){
+                customers.add(new Customer((int) list.getValueAt(i,0),
+                        String.valueOf(list.getValueAt(i,1)),
+                                String.valueOf(list.getValueAt(i,2) )));
+            }
+            return customers;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
 
+    }
 
+    @Override
+    public String toString() {
+        return this.name;
+    }
 }
