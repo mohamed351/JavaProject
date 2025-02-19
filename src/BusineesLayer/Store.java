@@ -6,12 +6,21 @@ import javax.swing.table.DefaultTableModel;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 public class Store {
     private  int id;
     private  String name;
     private  String address;
 
+    public Store(){
+
+    }
+    public Store(int id, String name, String address){
+        this.id = id;
+        this.name = name;
+        this.address = address;
+    }
 
     public int getId() {
         return id;
@@ -96,6 +105,27 @@ public class Store {
         catch (Exception ex){
             throw ex;
         }
+
+    }
+    public static List<Store> GetAllStore(){
+        DefaultTableModel listStore = null;
+        List<Store> stores = new ArrayList<>();
+        try {
+            listStore = SelectAll();
+            for(int i=0;i<listStore.getRowCount();i++){
+                stores.add(new Store((int) listStore.getValueAt(i,0) ,
+                        String.valueOf( listStore.getValueAt(i,1)),
+                        String.valueOf( listStore.getValueAt(i,2))
+                        ));
+
+
+            }
+
+            return stores;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
 
     }
 }

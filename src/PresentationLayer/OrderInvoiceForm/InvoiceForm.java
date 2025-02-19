@@ -1,7 +1,9 @@
 package PresentationLayer.OrderInvoiceForm;
 
 import BusineesLayer.Customer;
+import BusineesLayer.Employee;
 import BusineesLayer.Product;
+import BusineesLayer.Store;
 
 import javax.swing.*;
 import javax.swing.event.TableModelEvent;
@@ -17,6 +19,7 @@ public class InvoiceForm extends JFrame {
     private DefaultTableModel model;
     private JTable orderTable;
     JComboBox<Customer> customerJComboBox;
+    JComboBox<Store> storeJCombox;
     //private String[] productOptions = {"Product A", "Product B", "Product C", "Product D"};
 
     public InvoiceForm() {
@@ -43,13 +46,16 @@ public class InvoiceForm extends JFrame {
         // Row 1: Customer & Store
         addLabel("Customer", 0, 0, formPanel);
        // addComboBox(new String[]{"Testing Customer 1", "Testing Customer 2"}, 1, 0, formPanel);
-        customerJComboBox = new JComboBox<>(Customer.GetAllCustomers().toArray(new Customer[0]));
+        customerJComboBox = new JComboBox<Customer>(Customer.GetAllCustomers().toArray(new Customer[0]));
         gbc.gridx = 1;
         gbc.gridy = 0;
         formPanel.add(customerJComboBox, gbc);
 
         addLabel("Store", 2, 0, formPanel);
-        addComboBox(new String[]{"Testing Store 1", "Testing Store 2"}, 3, 0, formPanel);
+        storeJCombox = new JComboBox<Store>(Store.GetAllStore().toArray(new Store[0]));
+        gbc.gridx = 1;
+        gbc.gridy = 0;
+        formPanel.add(customerJComboBox, gbc);
 
         // Row 2: Date & Note
         addLabel("Date", 0, 1, formPanel);
@@ -86,14 +92,17 @@ public class InvoiceForm extends JFrame {
         model.addTableModelListener(new TableModelListener() {
             @Override
             public void tableChanged(TableModelEvent e) {
+                model.removeTableModelListener(this);
                 if (e.getType() == TableModelEvent.UPDATE) {
                     int rowCount = model.getRowCount();
                     int columnCount = model.getColumnCount();
+
 
                     if (rowCount > 0) {
                         boolean lastRowFilled = true;
 
                         for (int i = 0; i < columnCount; i++) {
+
                             Object cellValue = model.getValueAt(rowCount - 1, i);
                             if (cellValue == null || cellValue.toString().trim().isEmpty()) {
                                 lastRowFilled = false;
@@ -101,6 +110,14 @@ public class InvoiceForm extends JFrame {
                             }
                         }
 
+                        for(int i = 0; i<rowCount ;i++){
+                            Product product = (Product) model.getValueAt(i, 0);
+                            model.setValueAt(0,i,1);
+                           model.setValueAt("0" ,i, 1);
+                          model.setValueAt(String.valueOf( product.getPrice()) ,i, 2);
+
+                        }
+                        model.removeTableModelListener(this);
                         if (lastRowFilled) {
                             addRow(); // Add a new row only when the last one is completely filled
                         }
