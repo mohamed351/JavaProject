@@ -14,6 +14,10 @@ import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
+import PresentationLayer.Helpers.CalenderDate;
+import PresentationLayer.Helpers.CalenderForm;
+import com.toedter.calendar.JCalendar;
+
 public class InvoiceForm extends JFrame {
     private final GridBagConstraints gbc = new GridBagConstraints();
     private DefaultTableModel model;
@@ -53,13 +57,19 @@ public class InvoiceForm extends JFrame {
 
         addLabel("Store", 2, 0, formPanel);
         storeJCombox = new JComboBox<Store>(Store.GetAllStore().toArray(new Store[0]));
-        gbc.gridx = 1;
+        gbc.gridx = 3;
         gbc.gridy = 0;
-        formPanel.add(customerJComboBox, gbc);
+        formPanel.add(storeJCombox, gbc);
 
         // Row 2: Date & Note
+       // JCalendar calendar = new JCalendar();
         addLabel("Date", 0, 1, formPanel);
-        addTextField(1, 1, formPanel);
+//        addTextField(1, 1, formPanel);
+//        JButton button = new JButton();
+        CalenderDate currentCalender = new CalenderDate();
+        gbc.gridx = 1;
+        gbc.gridy = 1;
+        formPanel.add(currentCalender,gbc);
 
         addLabel("Note", 2, 1, formPanel);
         addTextField(3, 1, formPanel, "Note");
