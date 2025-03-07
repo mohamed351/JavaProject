@@ -1,9 +1,6 @@
 package PresentationLayer.OrderInvoiceForm;
 
-import BusineesLayer.Customer;
-import BusineesLayer.Employee;
-import BusineesLayer.Product;
-import BusineesLayer.Store;
+import BusineesLayer.*;
 
 import javax.swing.*;
 import javax.swing.event.TableModelEvent;
@@ -13,9 +10,13 @@ import javax.swing.table.TableColumn;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 import PresentationLayer.Helpers.CalenderDate;
 import PresentationLayer.Helpers.CalenderForm;
+import com.microsoft.sqlserver.jdbc.SQLServerException;
 import com.toedter.calendar.JCalendar;
 
 public class InvoiceForm extends JFrame {
@@ -24,6 +25,8 @@ public class InvoiceForm extends JFrame {
     private JTable orderTable;
     JComboBox<Customer> customerJComboBox;
     JComboBox<Store> storeJCombox;
+    JTextField noteTextField;
+    JTextField totalText;
     //private String[] productOptions = {"Product A", "Product B", "Product C", "Product D"};
 
     public InvoiceForm() {
@@ -64,27 +67,35 @@ public class InvoiceForm extends JFrame {
         // Row 2: Date & Note
        // JCalendar calendar = new JCalendar();
         addLabel("Date", 0, 1, formPanel);
+        JTextField textField = new JTextField();
+        textField.setText( new Date().toString());
 //        addTextField(1, 1, formPanel);
 //        JButton button = new JButton();
-        CalenderDate currentCalender = new CalenderDate();
+      //  CalenderDate currentCalender = new CalenderDate();
         gbc.gridx = 1;
         gbc.gridy = 1;
-        formPanel.add(currentCalender,gbc);
+        formPanel.add(textField,gbc);
 
         addLabel("Note", 2, 1, formPanel);
-        addTextField(3, 1, formPanel, "Note");
+        //addTextField(3, 1, formPanel, "Note");
+        noteTextField   = new JTextField();
+        gbc.gridx =3;
+        gbc.gridy =1;
+        formPanel.add(noteTextField,gbc);
 
         // Row 3: Invoice Type
-        addLabel("Invoice Type", 0, 2, formPanel);
-        addTextField(1, 2, formPanel, "Invoice Type");
+//        addLabel("Invoice Type", 0, 2, formPanel);
+//        addTextField(1, 2, formPanel, "Invoice Type");
 
         // Table Section
-        String[] columns = {"Product", "Quantity", "Price", "VAT Tax", "Discount", "Total Price"};
+        String[] columns = {"Product", "Quantity", "Price", "Total Price"};
         model = new DefaultTableModel(columns, 0);
         orderTable = new JTable(model);
 
         // Set ComboBox in "Product" Column
         TableColumn productColumn = orderTable.getColumnModel().getColumn(0);
+        TableColumn qtuColumn = orderTable.getColumnModel().getColumn(1);
+       // qtuColumn.setCellEditor(new DefaultCellEditor(new JTextField()));
         productColumn.setCellEditor(new DefaultCellEditor(new JComboBox<Product>(Product.GetAllProducts().toArray(new Product[0]))));
 
         JScrollPane tableScrollPane = new JScrollPane(orderTable);
@@ -99,10 +110,12 @@ public class InvoiceForm extends JFrame {
         addRow();
 
         // Listen for changes in the table to add a new row when the previous one is full
-        model.addTableModelListener(new TableModelListener() {
+
+      var event =  new TableModelListener() {
             @Override
             public void tableChanged(TableModelEvent e) {
-                model.removeTableModelListener(this);
+               model.removeTableModelListener(this);
+
                 if (e.getType() == TableModelEvent.UPDATE) {
                     int rowCount = model.getRowCount();
                     int columnCount = model.getColumnCount();
@@ -111,6 +124,27 @@ public class InvoiceForm extends JFrame {
                     if (rowCount > 0) {
                         boolean lastRowFilled = true;
 
+
+
+                        for(int i = 0; i<rowCount ;i++){
+                            try {
+                                Product product = (Product) model.getValueAt(i, 0);
+                               // model.setValueAt(0, i, 1);
+                              if(model.getValueAt(i, 1).toString().equals("0")){
+                                  model.setValueAt(1, i, 1);
+                              }
+
+                             //   JOptionPane.showMessageDialog(null,model.getValueAt(i, 1).toString());
+
+                                model.setValueAt(String.valueOf(product.getPrice()), i, 2);
+                               double qtu = Double.parseDouble(model.getValueAt(i, 1).toString());
+                                model.setValueAt(String.valueOf(product.getPrice() * qtu), i, 3);
+                            }
+                            catch (Exception ex){
+
+                            }
+
+                        }
                         for (int i = 0; i < columnCount; i++) {
 
                             Object cellValue = model.getValueAt(rowCount - 1, i);
@@ -120,21 +154,16 @@ public class InvoiceForm extends JFrame {
                             }
                         }
 
-                        for(int i = 0; i<rowCount ;i++){
-                            Product product = (Product) model.getValueAt(i, 0);
-                            model.setValueAt(0,i,1);
-                           model.setValueAt("0" ,i, 1);
-                          model.setValueAt(String.valueOf( product.getPrice()) ,i, 2);
-
-                        }
-                        model.removeTableModelListener(this);
                         if (lastRowFilled) {
-                            addRow(); // Add a new row only when the last one is completely filled
+                            addRow();
                         }
+                        model.addTableModelListener(this);
+                        CalculateTotal();
                     }
                 }
             }
-        });
+        };
+        model.addTableModelListener(event);
 
         // Add right-click delete row functionality
         orderTable.addMouseListener(new MouseAdapter() {
@@ -153,7 +182,10 @@ public class InvoiceForm extends JFrame {
             }
         });
 
+     //   gbc.fill = GridBagConstraints.BOTH;
+
         add(formPanel, BorderLayout.CENTER);
+        add(this.getFooter(),BorderLayout.SOUTH);
         setVisible(true);
     }
 
@@ -192,9 +224,72 @@ public class InvoiceForm extends JFrame {
         if (model.getRowCount() > 1) {
             model.removeRow(row);
         }
+        CalculateTotal();
+
     }
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(InvoiceForm::new);
+    }
+    private  JPanel getFooter(){
+        JPanel panel = new JPanel(new BorderLayout());
+        JLabel label = new JLabel("Total : ");
+    totalText  = new JTextField();
+    totalText.setEditable(false);
+        panel. add(label,BorderLayout.WEST);
+        panel.add(totalText,BorderLayout.CENTER);
+        JButton btn = new JButton("Submit");
+        btn.addActionListener(a->{
+            addInvoice();
+        });
+
+        panel.add(btn, BorderLayout.SOUTH);
+        return panel;
+    }
+
+    private  void addInvoice(){
+        int storeId = ((Store) storeJCombox.getSelectedItem()).getId();
+        int customerId = ((Customer) customerJComboBox.getSelectedItem()).getId();
+       String note =noteTextField.getText();
+       var order = new Order();
+       order.setEmployeeId(1); // change later
+        order.setCustomerId(customerId);
+        order.setStoreId(storeId);
+        order.setNote(note);
+        order.setOrderDate(new Date().toString());
+
+
+        for(int i=0;i<model.getRowCount();i++){
+            if(!model.getValueAt(i, 3).toString().isEmpty()){
+                var orderDetail = new  OrderDetail();
+
+                orderDetail.setProductId( ((Product) model.getValueAt(i,0)).getId());
+                orderDetail.setQuantity( Double.parseDouble( model.getValueAt(i,1).toString()));
+                orderDetail.setPrice( Double.parseDouble( model.getValueAt(i,2).toString()));
+                order.getOrderDetail().add(orderDetail);
+            }
+
+
+        }
+        try {
+            Order.AddInvoice(order);
+        } catch (SQLServerException e) {
+            JOptionPane.showMessageDialog(null,e.getMessage(),"Error", JOptionPane.ERROR);
+        }
+
+
+    }
+    private  void CalculateTotal(){
+        double total =0;
+      for(int i=0;i<model.getRowCount();i++){
+            if(!model.getValueAt(i, 3).toString().isEmpty()){
+                total+= Double.parseDouble( model.getValueAt(i, 3).toString());
+            }
+
+
+      }
+        totalText.setText(String.valueOf( total));
+
+
     }
 }
