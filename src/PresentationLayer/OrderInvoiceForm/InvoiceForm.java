@@ -10,13 +10,16 @@ import javax.swing.table.TableColumn;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.util.ArrayList;
-import java.util.Date;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
+import java.util.*;
 import java.util.List;
 
 import PresentationLayer.Helpers.CalenderDate;
 import PresentationLayer.Helpers.CalenderForm;
+import PresentationLayer.ReportViewer;
 import com.microsoft.sqlserver.jdbc.SQLServerException;
+import com.sun.tools.javac.Main;
 import com.toedter.calendar.JCalendar;
 
 public class InvoiceForm extends JFrame {
@@ -111,59 +114,7 @@ public class InvoiceForm extends JFrame {
 
         // Listen for changes in the table to add a new row when the previous one is full
 
-      var event =  new TableModelListener() {
-            @Override
-            public void tableChanged(TableModelEvent e) {
-               model.removeTableModelListener(this);
-
-                if (e.getType() == TableModelEvent.UPDATE) {
-                    int rowCount = model.getRowCount();
-                    int columnCount = model.getColumnCount();
-
-
-                    if (rowCount > 0) {
-                        boolean lastRowFilled = true;
-
-
-
-                        for(int i = 0; i<rowCount ;i++){
-                            try {
-                                Product product = (Product) model.getValueAt(i, 0);
-                               // model.setValueAt(0, i, 1);
-                              if(model.getValueAt(i, 1).toString().equals("0")){
-                                  model.setValueAt(1, i, 1);
-                              }
-
-                             //   JOptionPane.showMessageDialog(null,model.getValueAt(i, 1).toString());
-
-                                model.setValueAt(String.valueOf(product.getPrice()), i, 2);
-                               double qtu = Double.parseDouble(model.getValueAt(i, 1).toString());
-                                model.setValueAt(String.valueOf(product.getPrice() * qtu), i, 3);
-                            }
-                            catch (Exception ex){
-
-                            }
-
-                        }
-                        for (int i = 0; i < columnCount; i++) {
-
-                            Object cellValue = model.getValueAt(rowCount - 1, i);
-                            if (cellValue == null || cellValue.toString().trim().isEmpty()) {
-                                lastRowFilled = false;
-                                break;
-                            }
-                        }
-
-                        if (lastRowFilled) {
-                            addRow();
-                        }
-                        model.addTableModelListener(this);
-                        CalculateTotal();
-                    }
-                }
-            }
-        };
-        model.addTableModelListener(event);
+        addEventToGrid();
 
         // Add right-click delete row functionality
         orderTable.addMouseListener(new MouseAdapter() {
@@ -187,6 +138,62 @@ public class InvoiceForm extends JFrame {
         add(formPanel, BorderLayout.CENTER);
         add(this.getFooter(),BorderLayout.SOUTH);
         setVisible(true);
+    }
+
+    private void addEventToGrid() {
+        var event =  new TableModelListener() {
+              @Override
+              public void tableChanged(TableModelEvent e) {
+                 model.removeTableModelListener(this);
+
+                  if (e.getType() == TableModelEvent.UPDATE) {
+                      int rowCount = model.getRowCount();
+                      int columnCount = model.getColumnCount();
+
+
+                      if (rowCount > 0) {
+                          boolean lastRowFilled = true;
+
+
+
+                          for(int i = 0; i<rowCount ;i++){
+                              try {
+                                  Product product = (Product) model.getValueAt(i, 0);
+                                 // model.setValueAt(0, i, 1);
+                                if(model.getValueAt(i, 1).toString().equals("0")){
+                                    model.setValueAt(1, i, 1);
+                                }
+
+                               //   JOptionPane.showMessageDialog(null,model.getValueAt(i, 1).toString());
+
+                                  model.setValueAt(String.valueOf(product.getPrice()), i, 2);
+                                 double qtu = Double.parseDouble(model.getValueAt(i, 1).toString());
+                                  model.setValueAt(String.valueOf(product.getPrice() * qtu), i, 3);
+                              }
+                              catch (Exception ex){
+
+                              }
+
+                          }
+                          for (int i = 0; i < columnCount; i++) {
+
+                              Object cellValue = model.getValueAt(rowCount - 1, i);
+                              if (cellValue == null || cellValue.toString().trim().isEmpty()) {
+                                  lastRowFilled = false;
+                                  break;
+                              }
+                          }
+
+                          if (lastRowFilled) {
+                              addRow();
+                          }
+                          model.addTableModelListener(this);
+                          CalculateTotal();
+                      }
+                  }
+              }
+          };
+        model.addTableModelListener(event);
     }
 
     private void addLabel(String text, int x, int y, JPanel panel) {
@@ -272,9 +279,26 @@ public class InvoiceForm extends JFrame {
 
         }
         try {
-            Order.AddInvoice(order);
+         int orderId =    Order.AddInvoice(order);
+            JOptionPane.showMessageDialog(null,"Successfully Added Invoice");
+           // DefaultTableModel model = (DefaultTableModel) orderTable.getModel();
+            model.setRowCount(0);
+
+            addRow();
+            addEventToGrid();
+            //addRow();
+            Map<String,Object> objectMap = new HashMap<>();
+            objectMap.put("OrderID",orderId);
+            String path = InvoiceForm.class.getResource("../../Reports/Invoice.jrxml").getPath();
+            String decodedPath = URLDecoder.decode(path, "UTF-8");
+             new ReportViewer(path,objectMap);
+            //JOptionPane.showMessageDialog(null,orderId);
+
+            totalText.setText("0.0");
         } catch (SQLServerException e) {
             JOptionPane.showMessageDialog(null,e.getMessage(),"Error", JOptionPane.ERROR);
+        } catch (UnsupportedEncodingException e) {
+            throw new RuntimeException(e);
         }
 
 

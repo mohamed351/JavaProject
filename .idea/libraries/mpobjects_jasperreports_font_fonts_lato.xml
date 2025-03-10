@@ -1,0 +1,10 @@
+<component name="libraryTable">
+  <library name="mpobjects.jasperreports.font.fonts.lato" type="repository">
+    <properties maven-id="com.mpobjects.jasperreports.font:jasperreports-fonts-lato:2.0" />
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/com/mpobjects/jasperreports/font/jasperreports-fonts-lato/2.0/jasperreports-fonts-lato-2.0.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

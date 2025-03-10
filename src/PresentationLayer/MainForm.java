@@ -1,15 +1,14 @@
 package PresentationLayer;
 
-import BusineesLayer.Customer;
-import BusineesLayer.Employee;
-import BusineesLayer.Product;
-import BusineesLayer.Store;
+import BusineesLayer.*;
 import PresentationLayer.CustomerForm.MainCustomerForm;
 import PresentationLayer.Helpers.ElementsFormData;
 import PresentationLayer.Helpers.FormStatus;
 import PresentationLayer.OrderInvoiceForm.InvoiceForm;
 import PresentationLayer.ProductsForm.MainProductForm;
 import PresentationLayer.StoreForm.MainStoreForm;
+import PresentationLayer.SupplierForm.MainSupplierForm;
+import PresentationLayer.SupplierForm.SupplierForm;
 
 import javax.swing.*;
 import java.awt.*;
@@ -32,18 +31,24 @@ public class MainForm extends JFrame {
         clientInvoice.addActionListener(this::showClientInvoice);
 
         JMenuItem employeesMenu = new JMenuItem("Employees");
+
         JMenuItem customersMenu = new JMenuItem("Customers");
+        JMenuItem supplierFormMenu = new JMenuItem("Supplier");
         JMenuItem productMenu = new JMenuItem("Products");
         JMenuItem storeMenu = new JMenuItem("Stores");
+
+
         employeesMenu.addActionListener(this::showEmployeeForm);
         customersMenu.addActionListener(this::showCustomerForm);
         productMenu.addActionListener(this::showProductForm);
         storeMenu.addActionListener(this::showStoreForm);
+        supplierFormMenu.addActionListener(this::showSupplierForm);
         // Exit Action
 
 
      fileMenu.add(employeesMenu);
         fileMenu.add(customersMenu);
+        fileMenu.add(supplierFormMenu);
         fileMenu.add(productMenu);
         fileMenu.add(storeMenu);
 
@@ -137,6 +142,22 @@ public class MainForm extends JFrame {
 
         InvoiceForm frm = new InvoiceForm();
         frm.setVisible(true);
+
+    }
+
+    private void showSupplierForm(ActionEvent e){
+        try{
+            var ab = new ElementsFormData();
+            ab.title = "Supplier";
+            ab.tableModel = Supplier.SelectAll();
+            ElementForm form = new MainSupplierForm(ab);
+
+            form.setVisible(true);
+        }
+        catch (Exception ex){
+
+        }
+
 
     }
 }

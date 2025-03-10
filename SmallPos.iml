@@ -8,5 +8,7 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="toedter.jcalendar" level="project" />
+    <orderEntry type="library" exported="" name="guicedee.services.mssql.jdbc" level="project" />
+    <orderEntry type="library" exported="" name="net.sf.jasperreports" level="project" />
   </component>
 </module>

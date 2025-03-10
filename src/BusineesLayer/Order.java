@@ -68,7 +68,7 @@ public class Order {
         this.typeId = typeId;
     }
 
-    public static  void AddInvoice(Order order) throws SQLServerException {
+    public static  int AddInvoice(Order order) throws SQLServerException {
         List<Object> list = new ArrayList<>();
         list.add(order.getCustomerId());
         list.add(1);
@@ -85,7 +85,7 @@ public class Order {
         }
         list.add(invoiceDetails);
          DataLayer dataLayer = new DataLayer();
-        dataLayer.InsertOrUpdateOrDelete("sp_SubmitOrder",list);
+       return dataLayer.InsertOrUpdateOrDelete("sp_SubmitOrder",list,6);
     }
 
     public ArrayList<OrderDetail> getOrderDetail() {
