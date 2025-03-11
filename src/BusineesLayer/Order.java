@@ -71,9 +71,9 @@ public class Order {
     public static  int AddInvoice(Order order) throws SQLServerException {
         List<Object> list = new ArrayList<>();
         list.add(order.getCustomerId());
-        list.add(1);
+        list.add(Employee.LoginEmployee.getId());
         list.add(order.getNote());
-        list.add(1);
+        list.add(order.getStoreId());
         SQLServerDataTable invoiceDetails = new SQLServerDataTable();
         invoiceDetails.addColumnMetadata("ProductID", Types.INTEGER);
         invoiceDetails.addColumnMetadata("Price", Types.DECIMAL);

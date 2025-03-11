@@ -7,8 +7,10 @@ import PresentationLayer.Helpers.FormStatus;
 import PresentationLayer.OrderInvoiceForm.InvoiceForm;
 import PresentationLayer.ProductsForm.MainProductForm;
 import PresentationLayer.StoreForm.MainStoreForm;
+import PresentationLayer.StoreForm.StoreInfoForm;
 import PresentationLayer.SupplierForm.MainSupplierForm;
 import PresentationLayer.SupplierForm.SupplierForm;
+import PresentationLayer.SupplierInvoice.SupplierInvoiceForm;
 
 import javax.swing.*;
 import java.awt.*;
@@ -27,8 +29,14 @@ public class MainForm extends JFrame {
         JMenuBar menuBar = new JMenuBar();
         JMenu fileMenu = new JMenu("Master Data");
         JMenu InvoiceMenu = new JMenu("Invoice");
+
+
+
+
          JMenuItem clientInvoice = new JMenuItem("Client Invoice");
+        JMenuItem supplierInvoice = new JMenuItem("Supplier Invoice");
         clientInvoice.addActionListener(this::showClientInvoice);
+        supplierInvoice.addActionListener(this::showSupplierInvoice);
 
         JMenuItem employeesMenu = new JMenuItem("Employees");
 
@@ -46,6 +54,11 @@ public class MainForm extends JFrame {
         // Exit Action
 
 
+        JMenu storeData = new JMenu("Store Data");
+        JMenuItem storeInfo = new JMenuItem("Products in  Store");
+        storeInfo.addActionListener(this::showProductStore);
+        storeData.add(storeInfo);
+
      fileMenu.add(employeesMenu);
         fileMenu.add(customersMenu);
         fileMenu.add(supplierFormMenu);
@@ -53,8 +66,11 @@ public class MainForm extends JFrame {
         fileMenu.add(storeMenu);
 
      menuBar.add(fileMenu);
+
         InvoiceMenu.add(clientInvoice);
+        InvoiceMenu.add(supplierInvoice);
         menuBar.add(InvoiceMenu);
+        menuBar.add(storeData);
         setJMenuBar(menuBar);
 
 
@@ -145,6 +161,13 @@ public class MainForm extends JFrame {
 
     }
 
+    private  void showSupplierInvoice(ActionEvent e){
+
+        SupplierInvoiceForm frm = new SupplierInvoiceForm();
+        frm.setVisible(true);
+
+    }
+
     private void showSupplierForm(ActionEvent e){
         try{
             var ab = new ElementsFormData();
@@ -159,5 +182,9 @@ public class MainForm extends JFrame {
         }
 
 
+    }
+    private  void showProductStore(ActionEvent e){
+        var p = new StoreInfoForm();
+        p.setVisible(true);
     }
 }

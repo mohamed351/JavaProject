@@ -151,4 +151,30 @@ public class DataLayer {
             throw new RuntimeException(e);
         }
     }
+
+    public int InsertOrUpdateOrDelete(String proc , List<Object> obj, int[] outputParamterIndex){
+        StringBuilder storedProcedure = new StringBuilder("{call " + proc + "(");
+        for (int i = 0; i < obj.size()+1; i++) {
+            storedProcedure.append(i == 0 ? "?" : ",?");
+        }
+        storedProcedure.append(")}");
+
+        try {
+            Connection conntion = getConntion();
+            var stmt = conntion.prepareCall(storedProcedure.toString());
+            int index = 1;
+            for (Object value : obj) {
+                stmt.setObject(index++, value);
+            }
+            for (int outParam : outputParamterIndex) {
+                stmt.registerOutParameter(outParam, Types.INTEGER);
+            }
+            stmt.execute();
+
+            return stmt.getInt(outputParamterIndex[0]);
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }
