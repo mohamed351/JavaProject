@@ -3,12 +3,14 @@ package PresentationLayer;
 import BusineesLayer.Employee;
 import PresentationLayer.Helpers.ElementsFormData;
 import PresentationLayer.Helpers.FormStatus;
+import PresentationLayer.OrderInvoiceForm.InvoiceForm;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.event.ActionEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.net.URLDecoder;
 import java.sql.SQLException;
 
 public class MainEmployeeForm  extends  ElementForm{
@@ -52,6 +54,8 @@ public class MainEmployeeForm  extends  ElementForm{
     @Override
     public void printElement(ActionEvent event) {
 
+    String path = InvoiceForm.class.getResource("../../Reports/Employees.jrxml").getPath();
+       new ReportViewer(path,null);
     }
 
     @Override

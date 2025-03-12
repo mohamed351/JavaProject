@@ -51,7 +51,7 @@ public class MainSupplierForm  extends ElementForm {
 
     @Override
     public void printElement(ActionEvent event) {
-
+        JOptionPane.showMessageDialog(null,"Select");
     }
 
     @Override

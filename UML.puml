@@ -1,0 +1,257 @@
+@startuml
+
+class MicrosoftDataLayerConnection {
+    - String server
+    - String database
+    - String userName
+    - String password
+    - int port
+    + MicrosoftDataLayerConnection(String, String, String, String)
+    + getConnectionString(): String
+    + getServer(): String
+    + setServer(String): void
+    + getDatabase(): String
+    + setDatabase(String): void
+    + getUserName(): String
+    + setUserName(String): void
+    + getPassword(): String
+    + setPassword(String): void
+    + getPort(): int
+    + setPort(int): void
+}
+
+class DataLayer {
+    - MicrosoftDataLayerConnection connection
+    + DataLayer()
+    + SelectStoreProcedure(String, Map<String, Object>): ResultSet
+    + SelectGetTable(String, Map<String, Object>): DefaultTableModel
+    + SelectGetTable(String): DefaultTableModel
+    + InsertOrUpdateOrDelete(String, List<Object>)
+    + InsertOrUpdateOrDelete(String, List<Object>, int): int
+    + InsertOrUpdateOrDelete(String, List<Object>, int[]): int
+    + getConnection(): Connection
+}
+
+class Customer {
+    - int id
+    - String name
+    - String phone
+    + Customer()
+    + Customer(int, String, String)
+    + getId(): int
+    + setId(int): void
+    + getName(): String
+    + setName(String): void
+    + getPhone(): String
+    + setPhone(String): void
+    + GetCustomerByID(int): Customer
+    + Insert(Customer): void
+    + Update(Customer): void
+    + delete(int): void
+    + SelectAll(): DefaultTableModel
+    + GetAllCustomers(): ArrayList<Customer>
+    + toString(): String
+}
+
+class Employee {
+    - int id
+    - String userName
+    - String name
+    - String password
+    - double salary
+    + Employee()
+    + getId(): int
+    + setId(int): void
+    + getUserName(): String
+    + setUserName(String): void
+    + getPassword(): String
+    + setPassword(String): void
+    + getSalary(): Double
+    + setSalary(Double): void
+    + getName(): String
+    + setName(String): void
+    + LoginEmployee(String, String): Employee
+    + SelectEmployeesTable(): DefaultTableModel
+    + GetEmployeeByID(int): Employee
+    + InsertEmployee(Employee): void
+    + Update(Employee): void
+    + delete(int): void
+}
+
+class Order {
+    - int id
+    - String orderDate
+    - int employeeId
+    - int customerId
+    - int storeId
+    - String note
+    - int typeId
+    - ArrayList<OrderDetail> orderDetail
+    + getId(): int
+    + setId(int): void
+    + getOrderDate(): String
+    + setOrderDate(String): void
+    + getEmployeeId(): int
+    + setEmployeeId(int): void
+    + getCustomerId(): int
+    + setCustomerId(int): void
+    + getNote(): String
+    + setNote(String): void
+    + getTypeId(): int
+    + setTypeId(int): void
+    + AddInvoice(Order): int
+    + getOrderDetail(): ArrayList<OrderDetail>
+    + setOrderDetail(ArrayList<OrderDetail>): void
+    + getStoreId(): int
+    + setStoreId(int): void
+}
+
+class OrderDetail {
+    - int id
+    - int orderId
+    - int productId
+    - double quantity
+    - double price
+    + getId(): int
+    + setId(int): void
+    + getOrderId(): int
+    + setOrderId(int): void
+    + getProductId(): int
+    + setProductId(int): void
+    + getQuantity(): double
+    + setQuantity(double): void
+    + getPrice(): double
+    + setPrice(double): void
+}
+
+class Product {
+    - int id
+    - String name
+    - double price
+    + Product()
+    + Product(int, String, double)
+    + getId(): int
+    + setId(int): void
+    + getName(): String
+    + setName(String): void
+    + getPrice(): double
+    + setPrice(double): void
+    + GetProductByID(int): Product
+    + Insert(Product): void
+    + Update(Product): void
+    + delete(int): void
+    + SelectAll(): DefaultTableModel
+    + GetAllProducts(): ArrayList<Product>
+    + toString(): String
+}
+
+class Store {
+    - int id
+    - String name
+    - String address
+    + Store()
+    + Store(int, String, String)
+    + getId(): int
+    + setId(int): void
+    + getName(): String
+    + setName(String): void
+    + getAddress(): String
+    + setAddress(String): void
+    + GetStoreByID(int): Store
+    + Insert(Store): void
+    + Update(Store): void
+    + delete(int): void
+    + SelectAll(): DefaultTableModel
+    + GetAllStore(): List<Store>
+    + toString(): String
+}
+
+class Supplier {
+    - int id
+    - String name
+    - String phone
+    - String address
+    + Supplier()
+    + Supplier(int, String, String, String)
+    + getId(): int
+    + setId(int): void
+    + getName(): String
+    + setName(String): void
+    + getPhone(): String
+    + setPhone(String): void
+    + getAddress(): String
+    + setAddress(String): void
+    + GetSupplierByID(int): Supplier
+    + Insert(Supplier): void
+    + Update(Supplier): void
+    + delete(int): void
+    + SelectAll(): DefaultTableModel
+    + GetAllSuppliers(): List<Supplier>
+}
+
+class PurchasingInvoice {
+    - int id
+    - int supplierId
+    - int storeId
+    - int employeeId
+    - String purchasingInvoiceDate
+    - String note
+    - ArrayList<PurchasingInvoiceDetails> details
+    + getId(): int
+    + setId(int): void
+    + getSupplierId(): int
+    + setSupplierId(int): void
+    + getPurchasingInvoiceDate(): String
+    + setPurchasingInvoiceDate(String): void
+    + getDetails(): ArrayList<PurchasingInvoiceDetails>
+    + setDetails(ArrayList<PurchasingInvoiceDetails>): void
+    + AddInvoice(PurchasingInvoice): int
+    + getNote(): String
+    + setNote(String): void
+    + getStoreId(): int
+    + setStoreId(int): void
+    + getEmployeeId(): int
+    + setEmployeeId(int): void
+}
+
+class PurchasingInvoiceDetails {
+    - int id
+    - int purchasingInvoiceId
+    - int productId
+    - double quantity
+    - double price
+    + getId(): int
+    + setId(int): void
+    + getPurchasingInvoiceId(): int
+    + setPurchasingInvoiceId(int): void
+    + getProductId(): int
+    + setProductId(int): void
+    + getQuantity(): double
+    + setQuantity(double): void
+    + getPrice(): double
+    + setPrice(double): void
+}
+
+Order "1" *-- "many" OrderDetail : "contains"
+OrderDetail --> Product : "references"
+PurchasingInvoice "1" *-- "many" PurchasingInvoiceDetails : "contains"
+PurchasingInvoiceDetails --> Product : "references"
+PurchasingInvoice --> Store : "issued at"
+PurchasingInvoice --> Employee : "handled by"
+PurchasingInvoice --> Supplier : "issued to"
+PurchasingInvoiceDetails ..> PurchasingInvoice : "belongs to"
+
+DataLayer --> MicrosoftDataLayerConnection : "has a"
+Customer ..> DataLayer : "uses"
+Employee ..> DataLayer : "uses"
+Order ..> DataLayer : "uses"
+Product ..> DataLayer : "uses"
+PurchasingInvoice ..> DataLayer : "uses"
+Store ..> DataLayer : "uses"
+Supplier ..> DataLayer : "uses"
+
+Order --> Customer : "placed by"
+Order --> Employee : "handled by"
+OrderDetail ..> Order : "belongs to"
+
+@enduml

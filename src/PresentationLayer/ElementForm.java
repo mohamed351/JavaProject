@@ -65,7 +65,7 @@ public abstract   class ElementForm extends JFrame {
             var deleteButton = new JButton("Delete");
             deleteButton.addActionListener(this::deleteElement);
             var printButton = new JButton("Print");
-            deleteButton.addActionListener(this::printElement);
+            printButton.addActionListener(this::printElement);
             panel.setBorder(BorderFactory.createEmptyBorder(20,20,20,20));
             panel.add(buttonCreate);
             panel.add(editButton);

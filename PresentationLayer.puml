@@ -1,0 +1,69 @@
+@startuml
+
+package PresentationLayer {
+
+    class FormStatus {
+        + {static} int Create = 0
+        + {static} int Edit = 1
+    }
+
+    class ElementsFormData {
+        + ActionListener actionListenerAddButton
+        + ActionListener actionListenerEditButton
+        + ActionListener actionListenerDeleteButton
+        + ActionListener actionListenerPrintButton
+        + String title
+        + JTable table
+        + DefaultTableModel tableModel
+        + ReloadDataTable(DefaultTableModel): void
+    }
+
+    abstract class ElementForm {
+        - JTable table
+        - ElementsFormData abstact
+        - int selectedID
+        + ElementForm(ElementsFormData)
+        - InitialForm(): void
+        - addingTitle(): JPanel
+        - addGrid(): JPanel
+        - addButtons(): JPanel
+        + addNewElement(ActionEvent): void
+        + editNewElement(ActionEvent): void
+        + deleteElement(ActionEvent): void
+        + printElement(ActionEvent): void
+        + reloadData(DefaultTableModel): void
+        + getID(): int
+    }
+
+    class MainCustomerForm {
+        + MainCustomerForm(ElementsFormData)
+        + addNewElement(ActionEvent): void
+        + editNewElement(ActionEvent): void
+        + deleteElement(ActionEvent): void
+        + printElement(ActionEvent): void
+        + reloadData(DefaultTableModel): void
+    }
+
+    ElementForm --> ElementsFormData : "uses"
+    MainCustomerForm --|> ElementForm : "inherits"
+}
+
+package BusinessLayer {
+    class Customer {
+        + getId(): int
+        + setId(int): void
+        + getName(): String
+        + setName(String): void
+        + getPhone(): String
+        + setPhone(String): void
+        + GetCustomerByID(int): Customer
+        + Insert(Customer): void
+        + Update(Customer): void
+        + delete(int): void
+        + SelectAll(): DefaultTableModel
+    }
+
+    MainCustomerForm --> Customer : "manages"
+}
+
+@enduml
